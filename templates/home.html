@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">My Library</h1>
+        <a href="{{ url_for('add_book') }}">Add book</a>
+        <a href="{{ url_for('add_author') }}">Add author</a>
+    </div>
+
+    <form method="GET" action="/" class="card p-3 shadow-sm mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label for="search" class="form-label">Search for a book</label>
+                <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        class="form-control"
+                        placeholder="Enter title or keyword"
+                        value="{{ search }}"
+                >
+            </div>
+
+            <div class="col-md-3">
+                <label for="sort" class="form-label">Sort by</label>
+                <select name="sort" id="sort" class="form-select">
+                    <option value="title" {% if current_sort==
+                    "title" %}selected{% endif %}>
+                    Title
+                    </option>
+                    <option value="author" {% if current_sort==
+                    "author" %}selected{% endif %}>
+                    Author
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+
+    {% if books %}
+    <div class="row g-4">
+        {% for book in books %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <img
+                        src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                        class="card-img-top"
+                        alt="Cover of {{ book.title }}"
+                        onerror="this.src='https://via.placeholder.com/300x450?text=No+Cover';"
+                >
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text mb-1">
+                        <strong>Author:</strong> {{ book.author.name }}
+                    </p>
+                    <p class="card-text mb-1">
+                        <strong>ISBN:</strong> {{ book.isbn }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Publication Year:</strong> {{ book.publication_year }}
+                    </p>
+                    <form action="{{ url_for('delete_book', book_id=book.id) }}"
+                          method="POST"
+                          class="mt-2">
+
+                        <button
+                                type="submit"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this book?');"
+                        >
+                            Delete Book
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        No books match your search criteria.
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

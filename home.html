@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Add Book{% endblock %}
+
+{% block content %}
+
+{% for book in books %}
+<div><h3>{{ book.title }}</h3>
+</div>
+{% endfor %}
+
+{% endblock %}
