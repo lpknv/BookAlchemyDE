@@ -92,11 +92,9 @@ def delete_book(book_id):
     book = Book.query.get_or_404(book_id)
     author = book.author
 
-    # Buch löschen
     db.session.delete(book)
     db.session.commit()
 
-    # Prüfen ob Autor noch Bücher hat
     remaining_books = Book.query.filter_by(author_id=author.id).count()
 
     if remaining_books == 0:
